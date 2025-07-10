@@ -3,12 +3,20 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import BottomNavigation from "@/components/bottom-navigation";
+import AIInterventionPopup from "@/components/ai-intervention-popup";
+import { useAIIntervention } from "@/hooks/use-ai-intervention";
 import { User, Bell, Shield, Volume2, HelpCircle, ChevronRight } from "lucide-react";
 import { formatCurrency } from "@/lib/mock-data";
 import type { User as UserType } from "@shared/schema";
 
 export default function Profile() {
   const [, setLocation] = useLocation();
+
+  // AI Intervention system - triggers popup after 5 seconds of inactivity
+  const { showIntervention, dismissIntervention } = useAIIntervention({
+    triggerDelayMs: 5000,
+    enabled: true
+  });
 
   const { data: user } = useQuery<UserType>({
     queryKey: ["/api/user/1"],
@@ -120,6 +128,13 @@ export default function Profile() {
       </div>
 
       <BottomNavigation currentPage="profile" />
+
+      {/* AI Intervention Popup */}
+      <AIInterventionPopup
+        isOpen={showIntervention}
+        onClose={dismissIntervention}
+        currentPage="/profile"
+      />
     </div>
   );
 }

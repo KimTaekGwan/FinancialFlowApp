@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import BottomNavigation from "@/components/bottom-navigation";
+import AIInterventionPopup from "@/components/ai-intervention-popup";
+import { useAIIntervention } from "@/hooks/use-ai-intervention";
 import { ArrowLeft, Search, ArrowUp, ArrowDown, Coffee } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/mock-data";
 import type { Transaction } from "@shared/schema";
@@ -11,6 +13,12 @@ import type { Transaction } from "@shared/schema";
 export default function Transactions() {
   const [, setLocation] = useLocation();
   const [activeFilter, setActiveFilter] = useState("전체");
+
+  // AI Intervention system - triggers popup after 5 seconds of inactivity
+  const { showIntervention, dismissIntervention } = useAIIntervention({
+    triggerDelayMs: 5000,
+    enabled: true
+  });
 
   const { data: transactions = [] } = useQuery<Transaction[]>({
     queryKey: ["/api/transactions/1"],
@@ -155,6 +163,13 @@ export default function Transactions() {
       </div>
 
       <BottomNavigation currentPage="transactions" />
+
+      {/* AI Intervention Popup */}
+      <AIInterventionPopup
+        isOpen={showIntervention}
+        onClose={dismissIntervention}
+        currentPage="/transactions"
+      />
     </div>
   );
 }

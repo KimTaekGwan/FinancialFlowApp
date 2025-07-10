@@ -4,6 +4,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import AIInterventionPopup from "@/components/ai-intervention-popup";
+import { useAIIntervention } from "@/hooks/use-ai-intervention";
 import { ArrowLeft, Bot, Send, Mic } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import type { AIConversation } from "@shared/schema";
@@ -12,6 +14,12 @@ export default function AiChat() {
   const [, setLocation] = useLocation();
   const [message, setMessage] = useState("");
   const queryClient = useQueryClient();
+
+  // AI Intervention system - triggers popup after 5 seconds of inactivity
+  const { showIntervention, dismissIntervention } = useAIIntervention({
+    triggerDelayMs: 5000,
+    enabled: true
+  });
 
   const { data: conversations = [] } = useQuery<AIConversation[]>({
     queryKey: ["/api/conversations/1"],
@@ -169,6 +177,13 @@ export default function AiChat() {
         </div>
         <p className="text-xs text-gray-500 text-center mt-2">음성으로도 말씀하실 수 있어요</p>
       </div>
+
+      {/* AI Intervention Popup */}
+      <AIInterventionPopup
+        isOpen={showIntervention}
+        onClose={dismissIntervention}
+        currentPage="/ai-chat"
+      />
     </div>
   );
 }
