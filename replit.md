@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a Korean fintech mobile application built with React, Express.js, and TypeScript. The app provides AI-powered banking services with a focus on user-friendly interfaces for financial transactions, particularly designed for Korean speakers. It features a mobile-first design with AI chat assistance, money transfers, transaction history, and user profile management.
+This is a Korean fintech mobile application built with React, Express.js, and TypeScript. The app provides AI-powered banking services with a focus on user-friendly interfaces for financial transactions, particularly designed for Korean speakers. It features a mobile-first design with AI chat assistance, money transfers, transaction history, user profile management, and smart AI intervention system that detects when users need help.
 
 ## User Preferences
 
@@ -41,6 +41,13 @@ Preferred communication style: Simple, everyday language.
 4. **Transactions**: Transaction history with filtering
 5. **AI Chat**: Conversational interface for banking assistance
 6. **Profile**: User account management and settings
+
+### AI Intervention System
+- **Smart Detection**: Monitors user inactivity (5+ seconds) to detect confusion
+- **Context-Aware Popups**: Shows relevant help options based on current page
+- **Quick Actions**: Provides immediate access to common tasks like transfers and balance checks
+- **Voice Integration**: Seamless transition to AI chat for complex queries
+- **Senior-Friendly Design**: Large buttons, clear language, and visual feedback
 
 ### Shared Infrastructure
 - **Schema Definitions**: Centralized in `/shared/schema.ts`

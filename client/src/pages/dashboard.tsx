@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import BottomNavigation from "@/components/bottom-navigation";
+import AIInterventionPopup from "@/components/ai-intervention-popup";
+import { useAIIntervention } from "@/hooks/use-ai-intervention";
 import { Bot, Send, List, Eye } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/mock-data";
 import type { User, Transaction } from "@shared/schema";
@@ -19,6 +21,12 @@ export default function Dashboard() {
   });
 
   const recentTransactions = transactions.slice(0, 2);
+
+  // AI Intervention system - triggers popup after 5 seconds of inactivity
+  const { showIntervention, dismissIntervention } = useAIIntervention({
+    triggerDelayMs: 5000,
+    enabled: true
+  });
 
   return (
     <div className="h-screen flex flex-col">
@@ -122,6 +130,13 @@ export default function Dashboard() {
       </div>
 
       <BottomNavigation currentPage="dashboard" />
+
+      {/* AI Intervention Popup */}
+      <AIInterventionPopup
+        isOpen={showIntervention}
+        onClose={dismissIntervention}
+        currentPage="/dashboard"
+      />
     </div>
   );
 }

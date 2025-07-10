@@ -6,6 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import ConfirmationModal from "@/components/confirmation-modal";
 import SuccessModal from "@/components/success-modal";
+import AIInterventionPopup from "@/components/ai-intervention-popup";
+import { useAIIntervention } from "@/hooks/use-ai-intervention";
 import { ArrowLeft, Bot, Mic, Plus } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { formatCurrency } from "@/lib/mock-data";
@@ -20,6 +22,12 @@ export default function SendMoney() {
   const [showSuccess, setShowSuccess] = useState(false);
   
   const queryClient = useQueryClient();
+
+  // AI Intervention system - triggers popup after 5 seconds of inactivity
+  const { showIntervention, dismissIntervention } = useAIIntervention({
+    triggerDelayMs: 5000,
+    enabled: true
+  });
 
   const { data: contacts = [] } = useQuery<Contact[]>({
     queryKey: ["/api/contacts/1/frequent"],
@@ -214,6 +222,13 @@ export default function SendMoney() {
         }}
         recipient={selectedContact?.name || ""}
         amount={amount}
+      />
+
+      {/* AI Intervention Popup */}
+      <AIInterventionPopup
+        isOpen={showIntervention}
+        onClose={dismissIntervention}
+        currentPage="/send-money"
       />
     </div>
   );
